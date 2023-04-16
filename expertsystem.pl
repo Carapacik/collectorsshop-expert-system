@@ -1,63 +1,75 @@
-cond(0,"The International 2022").
-cond(1,"Aghanims Labyrinth").
-cond(2,"The International 2016").
-cond(3,"Подписка Dota Plus").
+% Category
+property(0,"The International 2022").
+property(1,"Aghanims Labyrinth").
+property(2,"The International 2016").
+property(3,"Подписка Dota Plus").
 
-cond(4,"Mythical").
-cond(5,"Immortal").
-cond(6,"Common").
+% Rarity
+property(4,"Mythical").
+property(5,"Immortal").
+property(6,"Common").
 
-cond(7,"Ловкость").
-cond(8,"Интеллект").
-cond(9,"Сила").
+% Attribute
+property(7,"Ловкость").
+property(8,"Интеллект").
+property(9,"Сила").
 
-cond(10,"Инструмент").
-cond(11,"Набор").
-cond(12,"Предмет").
+% Type
+property(10,"Инструмент").
+property(11,"Набор").
+property(12,"Предмет").
 
-cond(13,"С видео").
-cond(14,"Без видео").
+% Video
+property(13,"С видео").
+property(14,"Без видео").
 
-immutable_cond([0,1,2,3]).
-immutable_cond([4,5,6]).
-immutable_cond([7,8,9]).
-immutable_cond([10,11,12]).
-immutable_cond([13,14]).
+% Property roups
+property_group([0,1,2,3]).
+property_group([4,5,6]).
+property_group([7,8,9]).
+property_group([10,11,12]).
+property_group([13,14]).
 
-item("Rising Glory", "999", [2,4,9,11,13]).
-item("Pyrexae Polymorph Perfected", "699", [1,4,8,11,13]).
-item("Dark Behemoth", "1499", [0,4,9,11,13]).
-item("The strings of Suradan", "2699", [0,5,7,12,14]).
-item("Blue Horizons", "999", [0,4,9,11,13]).
-item("Crimson Dawn", "249", [0,4,9,11,13]).
-item("Годовая подписка Dota+", "3050", [3,6,10,14]).
+% Items
+item("Rising Glory", 999, [2,4,9,11,13]).
+item("Pyrexae Polymorph Perfected", 699, [1,4,8,11,13]).
+item("Dark Behemoth", 1499, [0,4,9,11,13]).
+item("The strings of Suradan", 2699, [0,5,7,12,14]).
+item("Blue Horizons", 999, [0,4,9,11,13]).
+item("Crimson Dawn", 249, [0,4,9,11,13]).
+item("Годовая подписка Dota+", 3050, [3,6,10,14]).
 
 promt(Answer, Answers, AnswersNew, Q) :-
   member(Answer, ['y','yes']),
   append(Answers, [Q], AnswersNew), !.
-
 promt(_, AnswersNew, AnswersNew, _).
-  check(Answers, _) :-
-  item(X, Y, Answers),
-  nl,
-  write('Скин найден, это - '),
-  write(X),
-  nl,
-  write('Цена предмета: ' ),
-  write(Y),
-  nl.
 
+check(Answers, _) :-
+  item(X, Y, Answers),nl,
+  write("Скин найден, это - "), write(X), nl,
+  write("Цена предмета - "), write(Y), nl.
 check(Answers, Q) :-
   Q1 is Q + 1,
   run(Q1, Answers), !.
 
+belongs_to_same_group(Q1, Q2) :-
+  property_group(Group),
+  member(Q1, Group),
+  member(Q2, Group).
+
+answered_in_same_group(Answers, Q) :-
+  member(Answer, Answers),
+  belongs_to_same_group(Q, Answer).
+
 run(Q, Answers) :-
-  cond(Q, Question),
-  write("Скин обладает свойством - "), write( Question ), write("?"), nl,
-  write("Впишите y или n"), nl,
-  read(Answer),
-  promt(Answer, Answers, AnswersNew, Q),
-  check(AnswersNew, Q).
+  property(Q, Question),
+  (answered_in_same_group(Answers, Q) -> check(Answers, Q);
+    write("Скин обладает свойством - "), write( Question ), write("?"), nl,
+    write("Впишите y или n"), nl,
+    read(Answer),
+    promt(Answer, Answers, AnswersNew, Q),
+    check(AnswersNew, Q)
+  ).
 
 process(1):-
   run(0, []).
