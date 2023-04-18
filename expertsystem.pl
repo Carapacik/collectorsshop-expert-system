@@ -23,83 +23,82 @@ property(12,"Предмет").
 property(13,"С видео").
 property(14,"Без видео").
 
-% Property roups
 property_group([0,1,2,3]).
 property_group([4,5,6]).
 property_group([7,8,9]).
 property_group([10,11,12]).
 property_group([13,14]).
 
-% Items
-item("Rising Glory", 999, [2,4,9,11,13]).
-item("Pyrexae Polymorph Perfected", 699, [1,4,8,11,13]).
-item("Dark Behemoth", 1499, [0,4,9,11,13]).
-item("The strings of Suradan", 2699, [0,5,7,12,14]).
-item("Blue Horizons", 999, [0,4,9,11,13]).
-item("Crimson Dawn", 249, [0,4,9,11,13]).
-item("Годовая подписка Dota+", 3050, [3,6,10,14]).
+item("Rising Glory", "999", [2,4,9,11,13]).
+item("Pyrexae Polymorph Perfected", "699", [1,4,8,11,13]).
+item("Dark Behemoth", "1499", [0,4,9,11,13]).
+item("The strings of Suradan", "2699", [0,5,7,12,14]).
+item("Blue Horizons", "999", [0,4,9,11,13]).
+item("Crimson Dawn", "249", [0,4,9,11,13]).
+item("Годовая подписка Dota+", "3050", [3,6,10,14]).
 
 :- dynamic item/3.
 
-prompt( Answer, Answers, AnswersNew, Q ) :-
-  member( Answer, ["y"] ),
-  append( Answers, [Q], AnswersNew ), !.
-prompt( _, AnswersNew, AnswersNew, _ ).
 
-ask_to_add_item( Answers ) :-
-    write( "Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)" ), nl,
-    read( Answer ),
-    ( member(Answer, ["y"] ) ->
-        write( "Введите название предмета: " ), nl,
-        read( ItemName ),
-        write( "Введите цену предмета: " ), nl,
-        read( ItemPrice ),
-        assertz( item(ItemName, ItemPrice, Answers) ),
-        write( "Новый предмет добавлен." )
+promt(Answer, Answers, AnswersNew, Q) :-
+  member(Answer, ['y','yes']),
+  append(Answers, [Q], AnswersNew), !.
+promt(_, AnswersNew, AnswersNew, _).
+
+ask_to_add_item(Answers) :-
+    nl, write("Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)"), nl,
+    read(Answer),
+    (member(Answer, ['y', 'yes']) ->
+        write("Введите название предмета: "), nl,
+        read(ItemName),
+        write("Введите цену предмета: "), nl,
+        read(ItemPrice),
+        assertz(item(ItemName, ItemPrice, Answers)),
+        write("Новый предмет добавлен."), nl, nl
     ;
-        write( "Не добавлено." )
+        write("Не добавлено."), nl, nl
     ).
 
-check( Answers, _ ) :-
-    item( X, Y, Answers ), nl,
-    write( "Скин найден, это - " ), write( X ), nl,
-    write( "Цена предмета: " ), write( Y ), nl.
-check( Answers, Q ) :-
-    property( Q, _ ),
+check(Answers, _) :-
+    item(X, Y, Answers), nl,
+    write("Скин найден, это - "),  write(X), nl,
+    write("Цена предмета - "), write(Y), nl, nl,
+    main.
+check(Answers, Q) :-
+    property(Q, _),
     Q1 is Q + 1,
-    run( Q1, Answers ), !.
-check( Answers, _ ) :-
-    \+ item( _, _, Answers ),
-    ask_to_add_item( Answers ), !.
+    run(Q1, Answers), !.
+check(Answers, _) :-
+    \+ item(_, _, Answers),
+    ask_to_add_item(Answers), main, !.
 
-belongs_to_same_group( Q1, Q2 ) :-
-    property_group( Group ),
-    member( Q1, Group ),
-    member( Q2, Group ).
+belongs_to_same_group(Q1, Q2) :-
+    property_group(Group),
+    member(Q1, Group),
+    member(Q2, Group).
 
-answered_in_same_group( Answers, Q ) :-
-    member( Answer, Answers ),
-    belongs_to_same_group( Q, Answer ).
+answered_in_same_group(Answers, Q) :-
+    member(Answer, Answers),
+    belongs_to_same_group(Q, Answer).
 
-run( Q, Answers ) :-
+run(Q, Answers) :-
   property(Q, Question),
-  (answered_in_same_group( Answers, Q ) ->
-    check( Answers, Q )
+  (answered_in_same_group(Answers, Q) ->
+    check(Answers, Q)
   ;
-    write( "Скин обладает свойством - " ), write( Question ), write("?"), nl,
-    write( "Впишите y или n" ), nl,
-    read(Answer ),
-    prompt( Answer, Answers, AnswersNew, Q ),
-    check( AnswersNew, Q )
+    write("Скин обладает свойством - "), write( Question ), write("? (y/n)"), nl,
+    read(Answer),
+    promt(Answer, Answers, AnswersNew, Q),
+    check(AnswersNew, Q)
   ).
 
-process( 1 ):-
-    run( 0, [] ).
-process( _ ) :-
-    write( "Выход из программы" ).
+process(1):-
+    run(0, []).
+process(_) :-
+    write("Выход из программы").
 
 main :-
-  write( "1 - Начать поиск" ), nl,
-  write( "0 - Выход" ), nl,
-  read( Choice ),
-  process( Choice ).
+  write("1 - Начать поиск"), nl,
+  write("0 - Выход"), nl,
+  read(Choice),
+  process(Choice).
