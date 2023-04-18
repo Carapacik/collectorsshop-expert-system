@@ -40,10 +40,10 @@ item("Годовая подписка Dota+", 3050, [3,6,10,14]).
 :- dynamic item/3.
 
 
-promt(Answer, Answers, AnswersNew, Q) :-
+prompt(Answer, Answers, AnswersNew, Q) :-
   member(Answer, ['y','yes']),
   append(Answers, [Q], AnswersNew), !.
-promt(_, AnswersNew, AnswersNew, _).
+prompt(_, AnswersNew, AnswersNew, _).
 
 ask_to_add_item(Answers) :-
     nl, write("Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)"), nl,
@@ -88,7 +88,7 @@ run(Q, Answers) :-
   ;
     write("Скин обладает свойством - "), write( Question ), write("? (y/n)"), nl,
     read(Answer),
-    promt(Answer, Answers, AnswersNew, Q),
+    prompt(Answer, Answers, AnswersNew, Q),
     check(AnswersNew, Q)
   ).
 
