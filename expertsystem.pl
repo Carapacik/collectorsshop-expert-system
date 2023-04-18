@@ -29,13 +29,13 @@ property_group([7,8,9]).
 property_group([10,11,12]).
 property_group([13,14]).
 
-item("Rising Glory", "999", [2,4,9,11,13]).
-item("Pyrexae Polymorph Perfected", "699", [1,4,8,11,13]).
-item("Dark Behemoth", "1499", [0,4,9,11,13]).
-item("The strings of Suradan", "2699", [0,5,7,12,14]).
-item("Blue Horizons", "999", [0,4,9,11,13]).
-item("Crimson Dawn", "249", [0,4,9,11,13]).
-item("Годовая подписка Dota+", "3050", [3,6,10,14]).
+item("Rising Glory", 999, [2,4,9,11,13]).
+item("Pyrexae Polymorph Perfected", 699, [1,4,8,11,13]).
+item("Dark Behemoth", 1499, [0,4,9,11,13]).
+item("The strings of Suradan", 2699, [0,5,7,12,14]).
+item("Blue Horizons", 999, [0,4,9,11,13]).
+item("Crimson Dawn", 249, [0,4,9,11,13]).
+item("Годовая подписка Dota+", 3050, [3,6,10,14]).
 
 :- dynamic item/3.
 
