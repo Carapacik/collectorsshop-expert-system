@@ -39,42 +39,64 @@ item("Blue Horizons", 999, [0,4,9,11,13]).
 item("Crimson Dawn", 249, [0,4,9,11,13]).
 item("Годовая подписка Dota+", 3050, [3,6,10,14]).
 
-promt(Answer, Answers, AnswersNew, Q) :-
-  member(Answer, ['y','yes']),
-  append(Answers, [Q], AnswersNew), !.
-promt(_, AnswersNew, AnswersNew, _).
+:- dynamic item/3.
 
-check(Answers, _) :-
-  item(X, Y, Answers),nl,
-  write("Скин найден, это - "), write(X), nl,
-  write("Цена предмета - "), write(Y), nl.
-check(Answers, Q) :-
-  Q1 is Q + 1,
-  run(Q1, Answers), !.
+prompt( Answer, Answers, AnswersNew, Q ) :-
+  member( Answer, ["y"] ),
+  append( Answers, [Q], AnswersNew ), !.
+prompt( _, AnswersNew, AnswersNew, _ ).
 
-belongs_to_same_group(Q1, Q2) :-
-  property_group(Group),
-  member(Q1, Group),
-  member(Q2, Group).
+ask_to_add_item( Answers ) :-
+    write( "Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)" ), nl,
+    read( Answer ),
+    ( member(Answer, ["y"] ) ->
+        write( "Введите название предмета: " ), nl,
+        read( ItemName ),
+        write( "Введите цену предмета: " ), nl,
+        read( ItemPrice ),
+        assertz( item(ItemName, ItemPrice, Answers) ),
+        write( "Новый предмет добавлен." )
+    ;
+        write( "Не добавлено." )
+    ).
 
-answered_in_same_group(Answers, Q) :-
-  member(Answer, Answers),
-  belongs_to_same_group(Q, Answer).
+check( Answers, _ ) :-
+    item( X, Y, Answers ), nl,
+    write( "Скин найден, это - " ), write( X ), nl,
+    write( "Цена предмета: " ), write( Y ), nl.
+check( Answers, Q ) :-
+    property( Q, _ ),
+    Q1 is Q + 1,
+    run( Q1, Answers ), !.
+check( Answers, _ ) :-
+    \+ item( _, _, Answers ),
+    ask_to_add_item( Answers ), !.
 
-run(Q, Answers) :-
+belongs_to_same_group( Q1, Q2 ) :-
+    property_group( Group ),
+    member( Q1, Group ),
+    member( Q2, Group ).
+
+answered_in_same_group( Answers, Q ) :-
+    member( Answer, Answers ),
+    belongs_to_same_group( Q, Answer ).
+
+run( Q, Answers ) :-
   property(Q, Question),
-  (answered_in_same_group(Answers, Q) -> check(Answers, Q);
-    write("Скин обладает свойством - "), write( Question ), write("?"), nl,
-    write("Впишите y или n"), nl,
-    read(Answer),
-    promt(Answer, Answers, AnswersNew, Q),
-    check(AnswersNew, Q)
+  (answered_in_same_group( Answers, Q ) ->
+    check( Answers, Q )
+  ;
+    write( "Скин обладает свойством - " ), write( Question ), write("?"), nl,
+    write( "Впишите y или n" ), nl,
+    read(Answer ),
+    prompt( Answer, Answers, AnswersNew, Q ),
+    check( AnswersNew, Q )
   ).
 
-process(1):-
-  run(0, []).
-process(_) :-
-  write( "Выход из программы" ).
+process( 1 ):-
+    run( 0, [] ).
+process( _ ) :-
+    write( "Выход из программы" ).
 
 main :-
   write( "1 - Начать поиск" ), nl,
