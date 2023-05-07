@@ -2,7 +2,7 @@
 property(0,"The International 2022").
 property(1,"Aghanims Labyrinth").
 property(2,"The International 2016").
-property(3,"Подписка Dota Plus").
+property(3,"Dota Plus").
 
 % Rarity
 property(4,"Mythical").
@@ -10,32 +10,33 @@ property(5,"Immortal").
 property(6,"Common").
 
 % Attribute
-property(7,"Ловкость").
-property(8,"Интеллект").
-property(9,"Сила").
+property(7,"Strength").
+property(8,"Agility").
+property(9,"Intelligence").
+property(10,"Universal").
 
 % Type
-property(10,"Инструмент").
-property(11,"Набор").
-property(12,"Предмет").
+property(11,"Set").
+property(12,"Item").
+property(13,"Tool").
 
 % Video
-property(13,"С видео").
-property(14,"Без видео").
+property(14,"Have video").
+property(15,"Without video").
 
 property_group([0,1,2,3]).
 property_group([4,5,6]).
-property_group([7,8,9]).
-property_group([10,11,12]).
-property_group([13,14]).
+property_group([7,8,9,10]).
+property_group([11,12,13]).
+property_group([14,15]).
 
-item("Rising Glory", 999, [2,4,9,11,13]).
-item("Pyrexae Polymorph Perfected", 699, [1,4,8,11,13]).
-item("Dark Behemoth", 1499, [0,4,9,11,13]).
-item("The strings of Suradan", 2699, [0,5,7,12,14]).
-item("Blue Horizons", 999, [0,4,9,11,13]).
-item("Crimson Dawn", 249, [0,4,9,11,13]).
-item("Year Dota+", 3050, [3,6,9,10,14]).
+item("Rising Glory", 999, [2,4,7,11,14]).
+item("Stranger in the Wandering Isles", 699, [1,4,8,11,14]).
+item("Dark Behemoth", 1499, [0,4,7,11,14]).
+item("The strings of Suradan", 2699, [0,5,8,12,15]).
+item("Blue Horizons", 999, [0,4,7,11,14]).
+item("Pyrexae Polymorph Perfected", 699, [1,4,10,11,14]).
+item("Year Dota Plus", 3050, [3,6,10,13,15]).
 
 :- dynamic item/3.
 
