@@ -41,17 +41,19 @@ item("Year Dota Plus", 3050, [3,6,10,13,15]).
 :- dynamic item/3.
 
 ask_to_add_item(Answers) :-
-  nl, write("Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)"), nl,
+  nl,
+  write("Не удалось найти скин с указанными свойствами. Хотите добавить новый предмет с этими свойствами? (y/n)"), nl,
   read(Answer),
-  (member(Answer, ['y', 'yes']) ->
-    write("Введите название предмета: "), nl,
-    read(ItemName),
-    write("Введите цену предмета: "), nl,
-    read(ItemPrice),
-    assertz(item(ItemName, ItemPrice, Answers)),
-    write("Новый предмет добавлен."), nl, nl
-  ;
-    write("Не добавлено."), nl, nl
+  (
+    member(Answer, ['y', 'yes']) ->
+      write("Введите название предмета: "), nl,
+      read(ItemName),
+      write("Введите цену предмета: "), nl,
+      read(ItemPrice),
+      assertz(item(ItemName, ItemPrice, Answers)),
+      write("Новый предмет добавлен."), nl, nl
+    ;
+      write("Не добавлено."), nl, nl
   ).
 
 check(Answers, _) :-
@@ -84,27 +86,28 @@ answered_in_same_group(Answers, Q) :-
   belongs_to_same_group(Q, Answer).
 
 prompt(Answer, Answers, AnswersNew, Q) :-
-  (member(Answer, ['y','yes']) ->
-    append(Answers, [Q], AnswersNew), !
-  ;
-    Q1 is Q + 1,
-    last_in_same_group(Q1),
-    append(Answers, [Q1], AnswersNew)
+  (
+    member(Answer, ['y','yes']) ->
+      append(Answers, [Q], AnswersNew), !
+    ;
+      Q1 is Q + 1,
+      last_in_same_group(Q1),
+      append(Answers, [Q1], AnswersNew)
   ).
-prompt(_, AnswersNew, AnswersNew, _).
 
 run(Q, Answers) :-
   property(Q, Question),
-  (answered_in_same_group(Answers, Q) ->
-    check(Answers, Q)
-  ;
-    write("Скин обладает свойством - "), write( Question ), write("? (y/n)"), nl,
-    read(Answer),
-    prompt(Answer, Answers, AnswersNew, Q),
-    check(AnswersNew, Q)
+  (
+    answered_in_same_group(Answers, Q) ->
+      check(Answers, Q)
+    ;
+      write("Скин обладает свойством - "), write(Question), write("? (y/n)"), nl,
+      read(Answer),
+      prompt(Answer, Answers, AnswersNew, Q),
+      check(AnswersNew, Q)
   ).
 
-process(1):-
+process(1) :-
   run(0, []).
 process(_) :-
   write("Выход из программы").
