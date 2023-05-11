@@ -19,13 +19,13 @@ attribute(X, Method) :-
     attribute(SuperX, Method).
 
 item_count(skin, 1).
-item_count(the_strings_of_suradan, 2).
+item_count(dark_behemoth, 2).
 item_count(stranger_in_the_wandering_isles, 3).
 item_count(X, Method) :-
     isa(X, SuperX),
     item_count(SuperX, Method).
 
-fact(Fact) :- Fact,!.
+fact(Fact) :- Fact.
 fact(Fact) :-
     Fact =.. [Rel, Arg1, Arg2],
     isa(Arg1, SuperArg),
